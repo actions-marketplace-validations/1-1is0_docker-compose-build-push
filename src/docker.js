@@ -136,7 +136,7 @@ const bakeCompose = (composeFile, serviceName, buildOpts) => {
   cp.execSync('docker buildx create --use');
 
   core.info(`Building Docker image ${serviceName} from ${composeFile}...`);
-  cp.execSync(createBuildCommand(imageName, dockerfile, buildOpts), cpOptions);
+  cp.execSync(createBuildBakeCommand(imageName, dockerfile, buildOpts), cpOptions);
 };
 
 const isEcr = registry => registry && registry.includes('amazonaws');

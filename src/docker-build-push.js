@@ -53,14 +53,16 @@ const run = () => {
     // Log in, build & push the Docker image
     // disable login, just build
     // docker.login(username, password, registry, buildOpts.skipPush);
-    if (dockerfile === "notUsed") {
-      docker.bakeCompose(composeFile, serviceName, buildOpts);
-    }
-    else {
-      docker.build(imageFullName, dockerfile, buildOpts);
-    }
+    // if (dockerfile === "notUsed") {
+    //   docker.bakeCompose(composeFile, serviceName, buildOpts);
+    // }
+    // else {
+    //   docker.build(imageFullName, dockerfile, buildOpts);
+    // }
     // disable push
     // docker.push(imageFullName, buildOpts.tags, buildOpts);
+
+    docker.bakeCompose(composeFile, serviceName, buildOpts);
 
     // Capture outputs
     core.setOutput('imageFullName', imageFullName);
