@@ -14,7 +14,13 @@ inputs:
   dockerfile:
     description: "Location of Dockerfile, if not Dockerfile in root directory"
     required: false
-    default: "Dockerfile"
+    # default: "Dockerfile"
+  composeFile:
+    description: "Location of the docker compose yaml file"
+    required: true
+  serviceName:
+    description: "Name of the service in the compose file"
+    required: true
   directory:
     description: "Directory to run `docker build` from, if not project root"
     required: false
