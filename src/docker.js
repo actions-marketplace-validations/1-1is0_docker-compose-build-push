@@ -96,6 +96,20 @@ const createBuildCommand = (imageName, dockerfile, buildOpts) => {
   return `${buildCommandPrefix} ${buildOpts.buildDir}`;
 };
 
+// Dynamically create 'docker buildx bake' command based on inputs provided
+const createBuildBakeCommand = (composeFile, serviceName, buildOpts) => {
+  const builder = 'buildx bake'
+
+  let buildCommandPrefix = `docker ${builder} -f ${composeFile} ${serviceName}`;
+
+  if (buildOpts.enableBuildKit) {
+    buildCommandPrefix = `DOCKER_BUILDKIT=1 ${buildCommandPrefix}`;
+  }
+  core.info(`BuildCommand ${buildCommandPrefix} ${buildOpts.buildDir}`);
+
+  return `${buildCommandPrefix} ${buildOpts.buildDir}`;
+};
+
 // Perform 'docker build' command
 const build = (imageName, dockerfile, buildOpts) => {
   if (!fs.existsSync(dockerfile)) {
@@ -108,6 +122,20 @@ const build = (imageName, dockerfile, buildOpts) => {
   }
 
   core.info(`Building Docker image ${imageName} with tags ${buildOpts.tags}...`);
+  cp.execSync(createBuildCommand(imageName, dockerfile, buildOpts), cpOptions);
+};
+
+// Perform 'docker compose build <service>' command
+const bakeCompose = (composeFile, serviceName, buildOpts) => {
+  // TODO idk check stuff
+  // if (!fs.existsSync(dockerfile)) {
+  //   core.setFailed(`Dockerfile does not exist in location ${dockerfile}`);
+  // }
+
+  // Setup buildx driver
+  cp.execSync('docker buildx create --use');
+
+  core.info(`Building Docker image ${serviceName} from ${composeFile}...`);
   cp.execSync(createBuildCommand(imageName, dockerfile, buildOpts), cpOptions);
 };
 
@@ -158,6 +186,7 @@ module.exports = {
   createFullImageName,
   createTags,
   build,
+  bakeCompose,
   login,
   push
 };

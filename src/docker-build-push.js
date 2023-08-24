@@ -38,7 +38,9 @@ const run = () => {
     const registry = core.getInput('registry', { required: true });
     const username = core.getInput('username');
     const password = core.getInput('password');
-    const dockerfile = core.getInput('dockerfile');
+    const dockerfile = core.getInput('dockerfile') || "notUsed";
+    const composeFile = core.getInput("composeFile");
+    const serviceName = core.getInput("serviceName");
     const githubOwner = core.getInput('githubOrg') || github.getDefaultOwner();
     const addLatest = core.getInput('addLatest') === 'true';
     const addTimestamp = core.getInput('addTimestamp') === 'true';
@@ -50,7 +52,12 @@ const run = () => {
 
     // Log in, build & push the Docker image
     docker.login(username, password, registry, buildOpts.skipPush);
-    docker.build(imageFullName, dockerfile, buildOpts);
+    if (dockerfile === "notUsed") {
+      docker.bakeCompose(composeFile, serviceName, buildOpts);
+    }
+    else {
+      docker.build(imageFullName, dockerfile, buildOpts);
+    }
     docker.push(imageFullName, buildOpts.tags, buildOpts);
 
     // Capture outputs
