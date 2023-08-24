@@ -51,14 +51,16 @@ const run = () => {
     core.info(`Docker image name used for this build: ${imageFullName}`);
 
     // Log in, build & push the Docker image
-    docker.login(username, password, registry, buildOpts.skipPush);
+    // disable login, just build
+    // docker.login(username, password, registry, buildOpts.skipPush);
     if (dockerfile === "notUsed") {
       docker.bakeCompose(composeFile, serviceName, buildOpts);
     }
     else {
       docker.build(imageFullName, dockerfile, buildOpts);
     }
-    docker.push(imageFullName, buildOpts.tags, buildOpts);
+    // disable push
+    // docker.push(imageFullName, buildOpts.tags, buildOpts);
 
     // Capture outputs
     core.setOutput('imageFullName', imageFullName);
