@@ -4,7 +4,7 @@ author: "Sean Smith"
 inputs:
   image:
     description: "Name of the Docker image"
-    required: true
+    required: false
   tags:
     description: "Tags override for Docker image"
     required: false
